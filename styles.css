@@ -15,6 +15,13 @@
     src: url('./fonts/dot-gothic/DotGothic16-Regular.ttf') format(truetype);
 }
 
+@font-face {
+    font-family: 'Roboto Mono';
+    src: url('./fonts/roboto-mono/RobotoMono-Light.ttf') format(truetype);
+    src: url('./fonts/roboto-mono/RobotoMono-Regular.ttf') format(truetype);
+    src: url('./fonts/roboto-mono/RobotoMono-Medium.ttf') format(truetype);
+}
+
 .calculatorContainer {
     margin: 0 auto;
     margin-top: 40px;
@@ -39,12 +46,13 @@
     color: #293241;
     padding: 20px;
     border-radius: 20px;;
-    font-family: 'Dot Gothic', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    letter-spacing: 0.3em;
+    font-family: 'Roboto Mono', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: 100;
+    letter-spacing: 0.1em;
     
 }
 
-.input{
+#input{
     flex-grow: 0;
     flex-shrink: 0;
     align-self: flex-start;
@@ -53,10 +61,10 @@
     white-space: nowrap;
     max-width: 360px;
     overflow-x: hidden;
-    direction: rtl;
+    direction: ltr;
 }
 
-.result {
+#result {
     display: flex;
     flex-grow: 0;
     flex-shrink: 0;
@@ -104,7 +112,8 @@ button {
 }
 
 
-.special {
+.special,
+.op {
     outline: 0;
     cursor: pointer;
     border: 2px solid #587499;
@@ -116,7 +125,8 @@ button {
 }
 
 
-.special:hover{
+.special:hover,
+.op:hover {
     background-color: #5e81ac;
     color: #fff;
 }
