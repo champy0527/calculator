@@ -2,7 +2,10 @@ let input = document.getElementById('input');
 let result = document.getElementById('result');
 
 const btns = document.querySelectorAll('button');
-const clear = document.querySelector('clear');
+
+const nums = document.querySelectorAll('.num')
+const ops = document.querySelectorAll('.op');
+
 const equals = document.querySelector('equal');
 
 
@@ -10,43 +13,122 @@ const equals = document.querySelector('equal');
 const clearScreen = () => {
     input.textContent= '';
     result.textContent='';
-    equation = 0;
+    numberDisplay = '';
+    operator;
 }
 
-const add = (a, b) => a + b;
-const subtract = (a, b) => a-b;
-const multiply = (a, b) => a*b;
-const divide = (a, b) => a/b;
+const deleteBtn = () => {
+    numberDisplay = numberDisplay.slice(0, -1);
+    result.textContent = numberDisplay;
+}
 
-let equation = '';
-let answer = '';
+const displayFirstOperand = (num) => {
+    if (numberDisplay.length < 13) {
+        numberDisplay += num;
+        result.textContent = numberDisplay;
+        
+        if (num === NaN) {
+            prevOperand = numberDisplay.slice(0, -1)
+            prevOperand = Number(numberDisplay);
+        console.log(`previous operand is ${prevOperand}`)
+        }
 
-let firstOperand;
-let secondOperand;
+        return prevOperand
+    }
+}
 
+const displaySecondOperand = (num) => {
+    if (numberDisplay.length < 13) {
+        // prevOperand = currentOperand;
+        // console.log(prevOperand);
+        numberDisplay += num;
+        result.textContent = numberDisplay;
+        
+        currentOperand = Number(numberDisplay)
+    }
+}
 
+const displayEquation = () => {
+    // prevNum = String(prevOperand)
+    // currNum = String(currentOperand)
+    // currOp = String(operator)
+    // input.textContent = prevOperand + operator + currentOperand
+    //STILL CAUSES ISSUES!!!
+    console.log(prevOperand)
+    console.log(currentOperand)
+    console.log(operator)
+}
+
+const operation = op => {
+    prevOperand = currentOperand;
+    input.textContent = prevOperand;
+    console.log(op)
+}
+
+// clear, delete, and display number
 btns.forEach(btn => {
     btn.addEventListener('click', () => {
         if (btn.value === 'clear') {
-            return clearScreen()
+            return clearScreen();
         } else if (btn.value ==='del') {
-            equation = equation.slice(0, -1);
-            input.textContent = equation;
-        } else if (btn.value >= 0 && btn.value <=9 || btn.value==='.')  {
-            equation += btn.value;
-            console.log(typeof equation);
-            input.textContent = equation;
-            firstOperand = Number(equation)
-            console.log(typeof firstOperand);
-            console.log(firstOperand)
+            return deleteBtn();
+        } else if (operator === undefined && btn.value >= 0 && btn.value <=9 && btn.value !== '=' || btn.value==='.') {
+            displayFirstOperand(btn.value);
+        } else if (operator = true && btn.value !== '=') {
+            displaySecondOperand(btn.value)
+
+        } else if (btn.value === '=') {
+            displayEquation()
+            // input.textContent =+ numberDisplay;
+            // result.textContent = calcResult(prevOperand, currentOperand);
         }
-        
-        
-        // else {
-        //     equation.
-        //     equation += btn.value;
-        //     input.textContent = equation;
-        // }
-        
     })
 })
+
+// ops.forEach(op => {
+//     op.addEventListener('click', () => {
+//         operator = op.value;
+//         // result.textContent += operator;
+        
+//         input.textContent = numberDisplay;
+        
+//         result.textContent = '';
+//         numberDisplay = '';    
+//     })
+// })
+
+
+let numberDisplay = '';
+let answer = '';
+
+let prevOperand;
+let currentOperand;
+let operator;
+
+// FIGURE OUT THE EQUAL SIGN
+
+
+// const add = (prevOperand, currentOperand) => prevOperand + currentOperand;
+// const subtract = (prevOperand, currentOperand) => prevOperand-currentOperand;
+// const multiply = (prevOperand, currentOperand) => prevOperand*currentOperand;
+// const divide = (prevOperand, currentOperand) => prevOperand/currentOperand;
+// const powerOf = (prevOperand, currentOperand) => prevOperand**currentOperand;
+
+
+// const calcResult = (prevOperand, currentOperand) => {
+//     if (operator === '+') {
+//         add(prevOperand, currentOperand)
+//     }
+//     if (operator === '-') {
+//         subtract(prevOperand, currentOperand)
+//     }
+//     if (operator === '*') {
+//         multiply(prevOperand, currentOperand)
+//     }
+//     if (operator === '/') {
+//         divide(prevOperand, currentOperand)
+//     }
+//     if (operator === '**') {
+//         powerOf(prevOperand, currentOperand)
+//     }
+// }
