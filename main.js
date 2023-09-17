@@ -18,23 +18,7 @@ keys.forEach(key => {
             let secondValue;
             let previousKeyType = btnContainer.dataset.previousKeyType
 
-
-            if (!action) {
-                if (!displayedInput || previousKeyType === 'operator') {
-                    result.textContent += keyContent;
-                    btnContainer.dataset.previousKeyType = 'number';
-                } else {
-                    result.textContent = keyContent;
-                    btnContainer.dataset.previousKeyType = 'number'
-                }
-
-            } else if (action === 'decimal' && !displayedInput) {
-                input.textContent = '0.'
-                btnContainer.dataset.previousKeyType = 'decimal'
-            } else if (action === 'decimal' && !displayedInput.includes('.')) {
-                input.textContent += keyContent;          
-
-            } else if (action === 'clear') {
+            if (action === 'clear') {
                 input.textContent = '';
                 result.textContent = '';
                 btnContainer.dataset.previousKeyType = 'clear'
@@ -43,91 +27,94 @@ keys.forEach(key => {
                 input.textContent = input.textContent.slice(0,-1);
                 btnContainer.dataset.previousKeyType = 'delete'
 
+            }
+
+            //log the numbers. i.e. if no action, they're numbers
+            if (!action) {
+                if (!displayedInput) {
+                    result.textContent += keyContent;
+                    btnContainer.dataset.previousKeyType = 'number';
+
+                } else if (previousKeyType === 'operator' || previousKeyType === 'number') {
+                    
+                    firstValue = firstValue;
+                    result.textContent += keyContent;
+                    
+                    displayedResult = result.textContent;
+
+                    btnContainer.dataset.previousKeyType = 'number'
+
+                    
+                } 
+
+            } else if (action === 'decimal' && !displayedInput) {
+                input.textContent = '0.'
+                btnContainer.dataset.previousKeyType = 'decimal'
+            } else if (action === 'decimal' && !displayedInput.includes('.')) {
+                input.textContent += keyContent;          
+
             } else if ( action === 'add' || action === 'subtract' || action === 'multiply' || action === 'divide' || action === 'exp') {
-                // keyContent.classList.add('.is-depressed');
+                
                 btnContainer.dataset.previousKeyType = 'operator'
 
-                firstValue = result.textContent;
-                console.log(firstValue)
+                displayedInput = result.textContent;
 
-                displayedInput = firstValue;
+                firstValue = displayedInput
 
                 input.textContent = displayedInput + keyContent;
-                result.textContent = ''
+                
+                result.textContent = '';
                 displayedResult = result.textContent;
-
+                secondValue = result.textContent
+                
                 btnContainer.dataset.operator = action;
+                operator = btnContainer.dataset.operator;
+                
+                
+            }
+
+            if (action === 'equals') {
+                
+                secondValue = displayedResult;
+
+
+                firstValue = parseFloat(firstValue);
+                secondValue = parseFloat(secondValue);
+                console.log(firstValue)
+                console.log(operator)
+                console.log(secondValue)
+
+                console.log(typeof firstValue)
+                console.log(typeof secondValue)
+                
+                input.textContent += secondValue
+                
+                
             }
        }
     })  
 })
         
 
-
-
-
-
-
-const displayFirstOperand = (num) => {
-    if (numberDisplay.length < 13) {
-        numberDisplay += num;
-        result.textContent = numberDisplay;
-        
-        if (num === NaN) {
-            prevOperand = numberDisplay.slice(0, -1)
-            prevOperand = Number(numberDisplay);
-        console.log(`previous operand is ${prevOperand}`)
-        }
-
-        return prevOperand
+const calculate = (num1, operator, num2) => {
+    let result = 0;
+    if (operator === 'add') {
+        result = num1 + num2;
+        return result
+    } else if (operator === 'subtract') {
+        result = num1 - num2;
+        return result
+    } else if (operator === 'multiply') {
+        result = num1 * num2;
+        return result
+    } else if (operator === 'divide') {
+        result = num1 / num2
+        return result
+    } else if (operator === 'exp') {
+        result = num1 ** num2
+        return result
     }
 }
 
-const displaySecondOperand = (num) => {
-    if (numberDisplay.length < 13) {
-        // prevOperand = currentOperand;
-        // console.log(prevOperand);
-        numberDisplay += num;
-        result.textContent = numberDisplay;
-        
-        currentOperand = Number(numberDisplay)
-    }
-}
+console.log(calculate('1', 'divide', 2))
 
-const displayEquation = () => {
-    // prevNum = String(prevOperand)
-    // currNum = String(currentOperand)
-    // currOp = String(operator)
-    // input.textContent = prevOperand + operator + currentOperand
-    //STILL CAUSES ISSUES!!!
-    console.log(prevOperand)
-    console.log(currentOperand)
-    console.log(operator)
-}
-
-const operation = op => {
-    prevOperand = currentOperand;
-    input.textContent = prevOperand;
-    console.log(op)
-}
-
-
-// ops.forEach(op => {
-//     op.addEventListener('click', () => {
-//         operator = op.value;
-//         // result.textContent += operator;
-        
-//         input.textContent = numberDisplay;
-        
-//         result.textContent = '';
-//         numberDisplay = '';    
-//     })
-// })
-
-
-let numberDisplay = '';
-let answer = '';
-
-let prevOperand;
-let currentOperand;
-let operator;
