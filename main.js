@@ -1,26 +1,72 @@
 let input = document.getElementById('input');
 let result = document.getElementById('result');
 
-const btns = document.querySelectorAll('button');
+const keys = document.querySelectorAll('.keys');
+const btnContainer = document.querySelector('.btnContainer')
 
-const nums = document.querySelectorAll('.num')
-const ops = document.querySelectorAll('.op');
+keys.forEach(key => {
+    key.addEventListener('click', e => {
+        if (e.target.matches('button')) {
+            const key = e.target;
+            const action = key.dataset.action
+            const keyContent = key.textContent;
+            let displayedInput = input.textContent;
+            let displayedResult = result.textContent;
+            
+            let firstValue = btnContainer.dataset.firstValue;
+            let operator = btnContainer.dataset.operator;
+            let secondValue;
+            let previousKeyType = btnContainer.dataset.previousKeyType
 
-const equals = document.querySelector('equal');
+
+            if (!action) {
+                if (!displayedInput || previousKeyType === 'operator') {
+                    result.textContent += keyContent;
+                    btnContainer.dataset.previousKeyType = 'number';
+                } else {
+                    result.textContent = keyContent;
+                    btnContainer.dataset.previousKeyType = 'number'
+                }
+
+            } else if (action === 'decimal' && !displayedInput) {
+                input.textContent = '0.'
+                btnContainer.dataset.previousKeyType = 'decimal'
+            } else if (action === 'decimal' && !displayedInput.includes('.')) {
+                input.textContent += keyContent;          
+
+            } else if (action === 'clear') {
+                input.textContent = '';
+                result.textContent = '';
+                btnContainer.dataset.previousKeyType = 'clear'
+
+            } else if (action === 'delete') {
+                input.textContent = input.textContent.slice(0,-1);
+                btnContainer.dataset.previousKeyType = 'delete'
+
+            } else if ( action === 'add' || action === 'subtract' || action === 'multiply' || action === 'divide' || action === 'exp') {
+                // keyContent.classList.add('.is-depressed');
+                btnContainer.dataset.previousKeyType = 'operator'
+
+                firstValue = result.textContent;
+                console.log(firstValue)
+
+                displayedInput = firstValue;
+
+                input.textContent = displayedInput + keyContent;
+                result.textContent = ''
+                displayedResult = result.textContent;
+
+                btnContainer.dataset.operator = action;
+            }
+       }
+    })  
+})
+        
 
 
-//clear screen
-const clearScreen = () => {
-    input.textContent= '';
-    result.textContent='';
-    numberDisplay = '';
-    operator;
-}
 
-const deleteBtn = () => {
-    numberDisplay = numberDisplay.slice(0, -1);
-    result.textContent = numberDisplay;
-}
+
+
 
 const displayFirstOperand = (num) => {
     if (numberDisplay.length < 13) {
@@ -65,25 +111,6 @@ const operation = op => {
     console.log(op)
 }
 
-// clear, delete, and display number
-btns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        if (btn.value === 'clear') {
-            return clearScreen();
-        } else if (btn.value ==='del') {
-            return deleteBtn();
-        } else if (operator === undefined && btn.value >= 0 && btn.value <=9 && btn.value !== '=' || btn.value==='.') {
-            displayFirstOperand(btn.value);
-        } else if (operator = true && btn.value !== '=') {
-            displaySecondOperand(btn.value)
-
-        } else if (btn.value === '=') {
-            displayEquation()
-            // input.textContent =+ numberDisplay;
-            // result.textContent = calcResult(prevOperand, currentOperand);
-        }
-    })
-})
 
 // ops.forEach(op => {
 //     op.addEventListener('click', () => {
@@ -104,31 +131,3 @@ let answer = '';
 let prevOperand;
 let currentOperand;
 let operator;
-
-// FIGURE OUT THE EQUAL SIGN
-
-
-// const add = (prevOperand, currentOperand) => prevOperand + currentOperand;
-// const subtract = (prevOperand, currentOperand) => prevOperand-currentOperand;
-// const multiply = (prevOperand, currentOperand) => prevOperand*currentOperand;
-// const divide = (prevOperand, currentOperand) => prevOperand/currentOperand;
-// const powerOf = (prevOperand, currentOperand) => prevOperand**currentOperand;
-
-
-// const calcResult = (prevOperand, currentOperand) => {
-//     if (operator === '+') {
-//         add(prevOperand, currentOperand)
-//     }
-//     if (operator === '-') {
-//         subtract(prevOperand, currentOperand)
-//     }
-//     if (operator === '*') {
-//         multiply(prevOperand, currentOperand)
-//     }
-//     if (operator === '/') {
-//         divide(prevOperand, currentOperand)
-//     }
-//     if (operator === '**') {
-//         powerOf(prevOperand, currentOperand)
-//     }
-// }
