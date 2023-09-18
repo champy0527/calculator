@@ -1,70 +1,69 @@
 let input = document.getElementById('input');
 let result = document.getElementById('result');
 
-const keys = document.querySelectorAll('.keys');
+const btns = document.querySelectorAll('.btn');
 const btnContainer = document.querySelector('.btnContainer')
 
-keys.forEach(key => {
-    key.addEventListener('click', e => {
+btns.forEach(btn => {
+    btn.addEventListener('click', e => {
         if (e.target.matches('button')) {
-            const key = e.target;
-            const action = key.dataset.action
-            const keyContent = key.textContent;
+            const btn = e.target;
+            const action = btn.dataset.action
+            const btnContent = btn.textContent;
             let displayedInput = input.textContent;
-            let displayedResult = result.textContent;
+            // let displayedResult = result.textContent;
             
             let firstValue = btnContainer.dataset.firstValue;
             let operator = btnContainer.dataset.operator;
             let secondValue;
-            let previousKeyType = btnContainer.dataset.previousKeyType
+
+            let previousBtnType = btnContainer.dataset.previousBtnType
 
             if (action === 'clear') {
                 input.textContent = '';
                 result.textContent = '';
-                btnContainer.dataset.previousKeyType = 'clear'
+                btnContainer.dataset.previousBtnType = 'clear'
 
             } else if (action === 'delete') {
                 input.textContent = input.textContent.slice(0,-1);
-                btnContainer.dataset.previousKeyType = 'delete'
+                btnContainer.dataset.previousBtnType = 'delete'
 
             }
 
             //log the numbers. i.e. if no action, they're numbers
             if (!action) {
                 if (!displayedInput) {
-                    result.textContent += keyContent;
-                    btnContainer.dataset.previousKeyType = 'number';
+                    result.textContent += btnContent;
+                    btnContainer.dataset.previousBtnType = 'number';
+                    firstValue = result.textContent;
 
-                } else if (previousKeyType === 'operator' || previousKeyType === 'number') {
+                } else if (previousBtnType === 'operator' || previousBtnType === 'number') {
                     
-                    firstValue = firstValue;
-                    result.textContent += keyContent;
                     
-                    displayedResult = result.textContent;
+                    result.textContent += btnContent;
+                    firstValue = result.textContent;
+                    // displayedResult = result.textContent;
 
-                    btnContainer.dataset.previousKeyType = 'number'
-
+                    btnContainer.dataset.previousBtnType = 'number'
                     
                 } 
 
+            //decimal
             } else if (action === 'decimal' && !displayedInput) {
-                input.textContent = '0.'
-                btnContainer.dataset.previousKeyType = 'decimal'
+                result.textContent = '0.'
+                btnContainer.dataset.previousBtnType = 'decimal'
+                
             } else if (action === 'decimal' && !displayedInput.includes('.')) {
-                input.textContent += keyContent;          
+                result.textContent += btnContent;          
 
+            //operator    
             } else if ( action === 'add' || action === 'subtract' || action === 'multiply' || action === 'divide' || action === 'exp') {
                 
-                btnContainer.dataset.previousKeyType = 'operator'
+                btnContainer.dataset.previousBtnType = 'operator';
 
-                displayedInput = result.textContent;
-
-                firstValue = displayedInput
-
-                input.textContent = displayedInput + keyContent;
-                
+                input.textContent = result.textContent + btnContent;
                 result.textContent = '';
-                displayedResult = result.textContent;
+                
                 secondValue = result.textContent
                 
                 btnContainer.dataset.operator = action;
@@ -73,24 +72,45 @@ keys.forEach(key => {
                 
             }
 
+            if (action === 'sqrt') {
+                
+                secondValue = result.textContent;
+                input.textContent = '√' + secondValue;
+                
+                result.textContent = '';
+                btnContainer.dataset.previousBtnType = 'sqrt';
+            }
+
             if (action === 'equals') {
                 
-                secondValue = displayedResult;
-
-
-                firstValue = parseFloat(firstValue);
-                secondValue = parseFloat(secondValue);
-                console.log(firstValue)
-                console.log(operator)
-                console.log(secondValue)
-
-                console.log(typeof firstValue)
-                console.log(typeof secondValue)
+                if (displayedInput.includes('√')) {
                 
-                input.textContent += secondValue
-                
+                    
+                    displayedInput = Number(input.textContent.substring(1))
+
+                    result.textContent = Math.sqrt(displayedInput);
+                    input.textContent = '';
+    
+                } else {
+                    // console.log(`input display is: ${displayedInput}`)
+                    firstValue = displayedInput.slice(0,-1);
+                    secondValue = result.textContent;
+
+
+                    // console.log(`First Value: ${firstValue}`)
+                    // console.log(`Operator: ${operator}`)
+                    // console.log(`Second Value: ${secondValue}`)
+
+
+                    input.textContent += secondValue
+                    
+                    result.textContent = calculate(firstValue, operator, secondValue)
+                }
+
                 
             }
+
+            
        }
     })  
 })
@@ -99,22 +119,22 @@ keys.forEach(key => {
 const calculate = (num1, operator, num2) => {
     let result = 0;
     if (operator === 'add') {
-        result = num1 + num2;
+        result = Number(num1) + Number(num2);
         return result
     } else if (operator === 'subtract') {
-        result = num1 - num2;
+        result = Number(num1) - Number(num2);
         return result
     } else if (operator === 'multiply') {
-        result = num1 * num2;
+        result = Number(num1) * Number(num2);
         return result
     } else if (operator === 'divide') {
-        result = num1 / num2
+        result = Number(num1) / Number(num2);
         return result
     } else if (operator === 'exp') {
-        result = num1 ** num2
+        result = Number(num1) ** Number(num2);
         return result
     }
 }
 
-console.log(calculate('1', 'divide', 2))
+console.log(calculate('1', 'exp', 2))
 
