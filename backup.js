@@ -11,9 +11,9 @@ btns.forEach(btn => {
             const action = btn.dataset.action
             const btnContent = btn.textContent;
             let displayedInput = input.textContent;
-            let displayedResult = result.textContent;
-                        
-            let firstValue;
+            // let displayedResult = result.textContent;
+            
+            let firstValue = btnContainer.dataset.firstValue;
             let operator = btnContainer.dataset.operator;
             let secondValue;
 
@@ -33,13 +33,17 @@ btns.forEach(btn => {
             //log the numbers. i.e. if no action, they're numbers
             if (!action) {
                 if (!displayedInput) {
-
                     result.textContent += btnContent;
                     btnContainer.dataset.previousBtnType = 'number';
+                    firstValue = result.textContent;
 
-                } else if (previousBtnType === 'operator' || previousBtnType === 'number' || previousBtnType === 'equals') {
+                } else if (previousBtnType === 'operator' || previousBtnType === 'number') {
+                    
                     
                     result.textContent += btnContent;
+                    firstValue = result.textContent;
+                    // displayedResult = result.textContent;
+
                     btnContainer.dataset.previousBtnType = 'number'
                     
                 } 
@@ -54,31 +58,17 @@ btns.forEach(btn => {
 
             //operator    
             } else if ( action === 'add' || action === 'subtract' || action === 'multiply' || action === 'divide' || action === 'exp') {
-
-                if (displayedResult && !displayedInput || previousBtnType === 'equals') {
-                    btnContainer.dataset.previousBtnType = 'operator';
-
-                    input.textContent = result.textContent + btnContent;
-                    result.textContent = '';
-                    
-                    secondValue = result.textContent
-                    
-                    btnContainer.dataset.operator = action;
-                    operator = btnContainer.dataset.operator;
-                    
-                } else if (displayedResult && displayedInput ) {
-
-                    firstValue = displayedInput.slice(0,-1);
-                    secondValue = displayedResult;
-
-                    input.textContent += secondValue
-
-                    input.textContent = calculate(firstValue, operator, secondValue) + btnContent;
-                    result.textContent = '';
                 
-                    btnContainer.dataset.operator = action;
-                    operator = btnContainer.dataset.operator;
-                }
+                btnContainer.dataset.previousBtnType = 'operator';
+
+                input.textContent = result.textContent + btnContent;
+                result.textContent = '';
+                
+                secondValue = result.textContent
+                
+                btnContainer.dataset.operator = action;
+                operator = btnContainer.dataset.operator;
+                
                 
             }
 
@@ -95,27 +85,32 @@ btns.forEach(btn => {
                 
                 if (displayedInput.includes('√')) {
                 
+                    
                     displayedInput = Number(input.textContent.substring(1))
 
                     result.textContent = Math.sqrt(displayedInput);
                     input.textContent = '';
-                    btnContainer.dataset.previousBtnType = 'equals';
     
                 } else {
                     // console.log(`input display is: ${displayedInput}`)
                     firstValue = displayedInput.slice(0,-1);
                     secondValue = result.textContent;
 
+
                     // console.log(`First Value: ${firstValue}`)
                     // console.log(`Operator: ${operator}`)
                     // console.log(`Second Value: ${secondValue}`)
 
+
                     input.textContent += secondValue
                     
                     result.textContent = calculate(firstValue, operator, secondValue)
-                    btnContainer.dataset.previousBtnType = 'equals';
                 }
+
+                
             }
+
+            
        }
     })  
 })
@@ -138,17 +133,6 @@ const calculate = (num1, operator, num2) => {
     } else if (operator === 'exp') {
         result = Number(num1) ** Number(num2);
         return result
-    }
-}
-
-//FIX THIS!! LIMIT RESULT DECIMAL PLACES
-const limitDigits = num => {
-    let str = String(num);
-    if (str.length > 12) {
-        if (str.includes('.')) {
-            let separated = str.split('.')
-        }
-
     }
 }
 
