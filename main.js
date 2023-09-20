@@ -25,9 +25,8 @@ btns.forEach(btn => {
                 btnContainer.dataset.previousBtnType = 'clear'
 
             } else if (action === 'delete') {
-                input.textContent = input.textContent.slice(0,-1);
-                btnContainer.dataset.previousBtnType = 'delete'
-
+                result.textContent = result.textContent.slice(0,-1);
+                btnContainer.dataset.previousBtnType = 'delete';
             }
 
             //log the numbers. i.e. if no action, they're numbers
@@ -37,21 +36,22 @@ btns.forEach(btn => {
                     result.textContent += btnContent;
                     btnContainer.dataset.previousBtnType = 'number';
 
-                } else if (previousBtnType === 'operator' || previousBtnType === 'number' || previousBtnType === 'equals') {
+                } else if (previousBtnType === 'operator' || previousBtnType === 'number' || previousBtnType === 'decimal' ||previousBtnType === 'equals') {
                     
                     result.textContent += btnContent;
-                    btnContainer.dataset.previousBtnType = 'number'
+                    btnContainer.dataset.previousBtnType = 'number';
                     
                 } 
 
             //decimal
-            } else if (action === 'decimal' && !displayedInput) {
+            } else if (action === 'decimal' && !displayedResult) {
                 result.textContent = '0.'
                 btnContainer.dataset.previousBtnType = 'decimal'
                 
-            } else if (action === 'decimal' && !displayedInput.includes('.')) {
-                result.textContent += btnContent;          
-
+            } else if (action === 'decimal' && !displayedResult.includes('.')) {
+                result.textContent += btnContent;   
+                btnContainer.dataset.previousBtnType = 'decimal'
+            
             //operator    
             } else if ( action === 'add' || action === 'subtract' || action === 'multiply' || action === 'divide' || action === 'exp') {
 
@@ -71,15 +71,14 @@ btns.forEach(btn => {
                     firstValue = displayedInput.slice(0,-1);
                     secondValue = displayedResult;
 
-                    input.textContent += secondValue
+                    input.textContent += secondValue;
 
                     input.textContent = calculate(firstValue, operator, secondValue) + btnContent;
                     result.textContent = '';
                 
                     btnContainer.dataset.operator = action;
                     operator = btnContainer.dataset.operator;
-                }
-                
+                }     
             }
 
             if (action === 'sqrt') {
@@ -141,16 +140,16 @@ const calculate = (num1, operator, num2) => {
     }
 }
 
-//FIX THIS!! LIMIT RESULT DECIMAL PLACES
-const limitDigits = num => {
-    let str = String(num);
-    if (str.length > 12) {
-        if (str.includes('.')) {
-            let separated = str.split('.')
-        }
+// //FIX THIS!! LIMIT RESULT DECIMAL PLACES
+// const limitDigits = num => {
+//     let str = String(num);
+//     if (str.length > 12) {
+//         if (str.includes('.')) {
+//             let separated = str.split('.')
+//         }
 
-    }
-}
+//     }
+// }
 
-console.log(calculate('1', 'exp', 2))
+// console.log(calculate('1', 'exp', 2))
 

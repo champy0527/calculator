@@ -53,29 +53,34 @@
 }
 
 #input{
-    flex-grow: 0;
+    flex-grow: 1;
     flex-shrink: 0;
     align-self: flex-start;
     font-size: 3em;  
     display: flex;
-    white-space: nowrap;
     max-width: 360px;
-    overflow-x: hidden;
-    direction: ltr;
+    min-height: 125px;
+    /* white-space: nowrap; */
+    /* overflow-x: hidden;
+    direction: ltr; */
+    overflow-wrap: anywhere;
+    
 }
 
 #result {
     display: flex;
-    flex-grow: 0;
+    flex-grow: 1;
     flex-shrink: 0;
     align-items: flex-end;
     justify-content: flex-end;
     margin-top: auto;
+    min-height: 125px;
     text-align: right;
     font-size: 3em;
     color: #ee6c4d;
-
-    overflow-x: hidden;
+    
+    overflow-wrap: anywhere;
+    /* overflow-x: hidden; */
 }
 
 button {
